@@ -8,5 +8,6 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "com.lihaoyi" %% "scalatags" % "0.12.0",
       "com.lihaoyi" %% "cask"      % "0.9.2",
+      "com.lihaoyi" %% "upickle"   % "3.1.4",
     )
   )

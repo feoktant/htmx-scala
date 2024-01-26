@@ -17,5 +17,6 @@ object App extends cask.MainRoutes {
     }
     Templates.index(contactSet) // 4
 
+  Contact.loadDb()
   initialize()
 }
