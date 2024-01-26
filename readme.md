@@ -22,3 +22,6 @@ without template engine.
 Not sure if [one-file-one-template](https://com-lihaoyi.github.io/scalatags/#Old-schoolTemplates)
 is so bad. I liked a lot Django's template engine, and missed it when worked with
 JSP or Twirl.
+
+[`missing.css`](https://missing.style) was updated to v1.1.1 as the latest release.
+It lost tag `all-caps`.
