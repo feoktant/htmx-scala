@@ -24,7 +24,7 @@ object Contact {
   private given Reader[Contact] = Reader.derived
   private given Writer[Contact] = Writer.derived
 
-  def validate(contact: Contact): Either[Map[String, String], Contact] =
+  private def validate(contact: Contact): Either[Map[String, String], Contact] =
     if (contact.email.isEmpty)
       Left(Map("email" -> "Email Required"))
     else if (!db.contains(contact.id) && db.values.exists(_.email == contact.email))
@@ -62,8 +62,8 @@ object Contact {
     db.addAll(contacts.map(c => c.id -> c))
 
   private[htmx] def saveDb(contactsPath: Path = Paths.get("contacts.json")): Unit =
-    val contactsFile = Files.newBufferedWriter(contactsPath)
-    writeTo[Seq[Contact]](db.values.toSeq.sortBy(_.id), contactsFile)
+    val contactsOut = Files.newOutputStream(contactsPath)
+    writeToOutputStream[Seq[Contact]](db.values.toSeq.sortBy(_.id), contactsOut, 2)
 
   private object OptionPickler extends upickle.AttributeTagged {
     override implicit def OptionWriter[T: Writer]: Writer[Option[T]] =
