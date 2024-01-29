@@ -7,14 +7,15 @@ import java.util.concurrent.atomic.AtomicInteger
 import scala.collection.concurrent.TrieMap
 
 case class Contact(
+    id: Int,
     first: Option[String],
     last: Option[String],
     phone: Option[String],
     email: String,
-    id: Int = -1,
 )
 
 object Contact {
+  val NewContactId: Int = -1
   // mock contacts database
   private val db = TrieMap.empty[Int, Contact]
   private val nextId = new AtomicInteger()
@@ -34,7 +35,7 @@ object Contact {
 
   def save(contact: Contact): Either[Map[String, String], Contact] =
     val newContact =
-      if (contact.id == -1) contact.copy(id = nextId.getAndIncrement())
+      if (contact.id == NewContactId) contact.copy(id = nextId.getAndIncrement())
       else contact
     validate(newContact).map { validatedContact =>
       db.put(validatedContact.id, validatedContact)
@@ -49,10 +50,10 @@ object Contact {
 
   def search(text: String): Seq[Contact] =
     db.values.collect {
-      case c @ Contact(Some(first), _, _, _, _) if first.contains(text) => c
-      case c @ Contact(_, Some(last), _, _, _) if last.contains(text) => c
-      case c @ Contact(_, _, Some(phone), _, _) if phone.contains(text) => c
-      case c @ Contact(_, _, _, email, _) if email.contains(text) => c
+      case c @ Contact(_, Some(first), _, _, _) if first.contains(text) => c
+      case c @ Contact(_, _, Some(last), _, _) if last.contains(text) => c
+      case c @ Contact(_, _, _, Some(phone), _) if phone.contains(text) => c
+      case c @ Contact(_, _, _, _, email) if email.contains(text) => c
     }.toSeq.sortBy(_.id)
 
   def loadDb(contactsPath: Path = Paths.get("contacts.json")): Unit =

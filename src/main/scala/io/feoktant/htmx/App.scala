@@ -1,8 +1,9 @@
 package io.feoktant.htmx
 
 import cask.model.Response
+import io.feoktant.htmx.Contact.NewContactId
 import scalatags.Text
-import scalatags.Text._
+import scalatags.Text.*
 
 object App extends cask.MainRoutes {
 
@@ -32,7 +33,7 @@ object App extends cask.MainRoutes {
       last_name: Option[String],
       phone: Option[String],
   ): Response[Text.all.doctype] =
-    val contact = Contact(first_name, last_name, phone, email)
+    val contact = Contact(NewContactId, first_name, last_name, phone, email)
     Contact.save(contact) match
       case Right(value) =>
         cask.Response(Text.all.doctype("html")(StringFrag("")), 301, Seq("Location" -> "/contacts"), Nil)
