@@ -40,6 +40,14 @@ object App extends cask.MainRoutes {
       case Left(errors) =>
         cask.Response(Templates.`new`(Some(contact), errors))
 
+  @cask.get("/contacts/:contactId")
+  def contactsView(contactId: Int): Response[Text.all.doctype] =
+    Contact.find(contactId) match
+      case Some(contact) =>
+        cask.Response(Templates.show(contact))
+      case None =>
+        cask.Response(Text.all.doctype("html")(StringFrag("")), 404)
+
   Contact.loadDb()
   initialize()
 }

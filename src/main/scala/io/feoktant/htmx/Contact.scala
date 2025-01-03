@@ -55,6 +55,8 @@ object Contact {
       case c @ Contact(_, _, _, Some(phone), _) if phone.contains(text) => c
       case c @ Contact(_, _, _, _, email) if email.contains(text) => c
     }.toSeq.sortBy(_.id)
+    
+  def find(contactId: Int): Option[Contact] = db.get(contactId)
 
   def loadDb(contactsPath: Path = Paths.get("contacts.json")): Unit =
     val contacts = read[List[Contact]](contactsPath)

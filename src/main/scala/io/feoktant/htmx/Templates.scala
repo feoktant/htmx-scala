@@ -111,4 +111,19 @@ object Templates {
         a(href := "/contacts")("Back")
       ),
     ))
+    
+  def show(contact: Contact): doctype =
+    layout(
+      Seq(
+        h1(Seq(contact.first, contact.last).flatten.mkString(" ")),
+        div(
+          div(s"Phone: ${contact.phone.getOrElse("")}"),
+          div(s"Email: ${contact.email}")
+        ),
+        p(
+          a(href := s"/contacts/${contact.id}/edit")("Edit"),
+          a(href := "/contacts")("Back")
+        ),
+      )
+    )
 }
