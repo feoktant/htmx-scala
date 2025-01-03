@@ -57,6 +57,8 @@ object Contact {
     }.toSeq.sortBy(_.id)
     
   def find(contactId: Int): Option[Contact] = db.get(contactId)
+  
+  def delete(contactId: Int): Option[Contact] = db.remove(contactId)
 
   def loadDb(contactsPath: Path = Paths.get("contacts.json")): Unit =
     val contacts = read[List[Contact]](contactsPath)

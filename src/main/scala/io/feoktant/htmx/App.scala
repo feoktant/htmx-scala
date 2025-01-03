@@ -74,6 +74,14 @@ object App extends cask.MainRoutes {
           case Left(errors) =>
             cask.Response(Templates.edit(contact, errors))
 
+  @cask.postForm("/contacts/:contactId/delete")
+  def contactsDelete(contactId: Int): Response[Text.all.doctype] =
+    Contact.delete(contactId) match
+      case None =>
+        cask.Response(Text.all.doctype("html")(StringFrag("")), 404)
+      case Some(contact) =>
+        cask.Response(Text.all.doctype("html")(StringFrag("")), 301, Seq("Location" -> s"/contacts"), Nil)
+
   Contact.loadDb()
   initialize()
 }
