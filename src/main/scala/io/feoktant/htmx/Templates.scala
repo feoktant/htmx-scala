@@ -9,7 +9,7 @@ object Templates {
       html(lang := "")(
         head(
           title := "Contact App",
-          link(rel := "stylesheet", href := "https://unpkg.com/missing.css@1.1.1"),
+          link(rel := "stylesheet", href := "https://unpkg.com/missing.css@1.1.3"),
           link(rel := "stylesheet", href := "/static/site.css"),
         ),
         body()(
