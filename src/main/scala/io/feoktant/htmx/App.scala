@@ -56,6 +56,24 @@ object App extends cask.MainRoutes {
       case None =>
         cask.Response(Text.all.doctype("html")(StringFrag("")), 404)
 
+  @cask.postForm("/contacts/:contactId/edit")
+  def contactsEditPost(
+    contactId: Int,
+    email: String,
+    first_name: Option[String],
+    last_name: Option[String],
+    phone: Option[String],
+  ): Response[Text.all.doctype] =
+    Contact.find(contactId)
+      .map(_.copy(first = first_name, last = last_name, email = email, phone = phone)) match
+      case None => cask.Response(Text.all.doctype("html")(StringFrag("")), 404)
+      case Some(contact) =>
+        Contact.save(contact) match
+          case Right(value) =>
+            cask.Response(Text.all.doctype("html")(StringFrag("")), 301, Seq("Location" -> s"/contacts/$contactId"), Nil)
+          case Left(errors) =>
+            cask.Response(Templates.edit(contact, errors))
+
   Contact.loadDb()
   initialize()
 }
