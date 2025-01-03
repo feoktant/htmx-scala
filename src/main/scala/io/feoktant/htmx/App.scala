@@ -48,6 +48,14 @@ object App extends cask.MainRoutes {
       case None =>
         cask.Response(Text.all.doctype("html")(StringFrag("")), 404)
 
+  @cask.get("/contacts/:contactId/edit")
+  def contactsEditGet(contactId: Int): Response[Text.all.doctype] =
+    Contact.find(contactId) match
+      case Some(contact) =>
+        cask.Response(Templates.edit(contact))
+      case None =>
+        cask.Response(Text.all.doctype("html")(StringFrag("")), 404)
+
   Contact.loadDb()
   initialize()
 }

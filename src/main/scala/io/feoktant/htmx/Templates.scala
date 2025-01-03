@@ -111,7 +111,7 @@ object Templates {
         a(href := "/contacts")("Back")
       ),
     ))
-    
+
   def show(contact: Contact): doctype =
     layout(
       Seq(
@@ -126,4 +126,45 @@ object Templates {
         ),
       )
     )
+
+  def edit(
+    contact: Contact,
+    errors: Map[String, String] = Map.empty,
+  ): doctype =
+    layout(Seq(
+      form(action := s"/contacts/${contact.id}/edit", method := "post")(
+        legend("Contact Values"),
+        p(
+          label(`for` := "email")("Email"),
+          input(name := "email", id := "email", `type` := "email",
+                placeholder := "Email", value := contact.email),
+          span(`class` := "error")(errors.get("email")),
+        ),
+        p(
+          label(`for` := "first_name")("First Name"),
+          input(name := "first_name", id := "first_name", `type` := "text",
+               placeholder := "First Name", value := contact.first.getOrElse("")),
+          span(`class` := "error")(errors.get("first")),
+        ),
+        p(
+         label(`for` := "last_name")("Last Name"),
+         input(name := "last_name", id := "last_name", `type` := "text",
+               placeholder := "Last Name", value := contact.last.getOrElse("")),
+         span(`class` := "error")(errors.get("last")),
+         ),
+         p(
+         label(`for` := "phone")("Phone"),
+         input(name := "phone", id := "phone", `type` := "text",
+               placeholder := "Phone", value := contact.phone.getOrElse("")),
+         span(`class` := "error")(errors.get("phone")),
+        ),
+        button("Save")
+      ),
+      form(action := s"/contacts/${contact.id}/delete", method := "post")(
+        button("Delete")
+      ),
+      p(
+        a(href := "/contacts")("Back")
+      ),
+    ))
 }
