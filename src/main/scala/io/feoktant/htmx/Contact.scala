@@ -14,7 +14,7 @@ case class Contact(
     email: String,
 )
 
-object Contact {
+object Contact:
   val NewContactId: Int = -1
   // mock contacts database
   private val db = TrieMap.empty[Int, Contact]
@@ -37,11 +37,10 @@ object Contact {
     val newContact =
       if (contact.id == NewContactId) contact.copy(id = nextId.getAndIncrement())
       else contact
-    validate(newContact).map { validatedContact =>
+    validate(newContact).map: validatedContact =>
       db.put(validatedContact.id, validatedContact)
       saveDb()
       validatedContact
-    }
 
   def all(page: Int = 1): Seq[Contact] =
     val start = 0.max(page - 1) * PageSize
@@ -49,15 +48,15 @@ object Contact {
     db.values.toSeq.sortBy(_.id).slice(start, end)
 
   def search(text: String): Seq[Contact] =
-    db.values.collect {
+    db.values.collect:
       case c @ Contact(_, Some(first), _, _, _) if first.contains(text) => c
       case c @ Contact(_, _, Some(last), _, _) if last.contains(text) => c
       case c @ Contact(_, _, _, Some(phone), _) if phone.contains(text) => c
       case c @ Contact(_, _, _, _, email) if email.contains(text) => c
-    }.toSeq.sortBy(_.id)
-    
+    .toSeq.sortBy(_.id)
+
   def find(contactId: Int): Option[Contact] = db.get(contactId)
-  
+
   def delete(contactId: Int): Option[Contact] = db.remove(contactId)
 
   def loadDb(contactsPath: Path = Paths.get("contacts.json")): Unit =
@@ -70,18 +69,12 @@ object Contact {
     val contactsOut = Files.newOutputStream(contactsPath)
     writeToOutputStream[Seq[Contact]](db.values.toSeq.sortBy(_.id), contactsOut, 2)
 
-  private object OptionPickler extends upickle.AttributeTagged {
+  private object OptionPickler extends upickle.AttributeTagged:
     override implicit def OptionWriter[T: Writer]: Writer[Option[T]] =
-      implicitly[Writer[T]].comap[Option[T]] {
+      implicitly[Writer[T]].comap[Option[T]]:
         case None => null.asInstanceOf[T]
         case Some(x) => x
-      }
 
-    override implicit def OptionReader[T: Reader]: Reader[Option[T]] = {
-      new Reader.Delegate[Any, Option[T]](implicitly[Reader[T]].map(Some(_))) {
+    override implicit def OptionReader[T: Reader]: Reader[Option[T]] =
+      new Reader.Delegate[Any, Option[T]](implicitly[Reader[T]].map(Some(_))):
         override def visitNull(index: Int): Option[T] = None
-      }
-    }
-  }
-
-}

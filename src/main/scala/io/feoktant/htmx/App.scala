@@ -1,11 +1,10 @@
 package io.feoktant.htmx
 
 import cask.model.Response
-import io.feoktant.htmx.Contact.NewContactId
 import scalatags.Text
 import scalatags.Text.all.*
 
-object App extends cask.MainRoutes {
+object App extends cask.MainRoutes:
 
   @cask.staticResources("/static")
   def staticResourceRoutes() = "static"
@@ -16,10 +15,9 @@ object App extends cask.MainRoutes {
 
   @cask.get("/contacts")
   def contacts(q: Option[String] = None): doctype =
-    val contactSet = q match { // 1
+    val contactSet = q match // 1
       case Some(search) => Contact.search(search) // 2
       case _ => Contact.all() // 3
-    }
     Templates.index(contactSet) // 4
 
   @cask.get("/contacts/new")
@@ -33,7 +31,7 @@ object App extends cask.MainRoutes {
       last_name: Option[String],
       phone: Option[String],
   ): Response[doctype] =
-    val contact = Contact(NewContactId, first_name, last_name, phone, email)
+    val contact = Contact(Contact.NewContactId, first_name, last_name, phone, email)
     Contact.save(contact) match
       case Right(value) =>
         cask.Redirect("/contacts").copy(data = doctype("html")(StringFrag("")))
@@ -84,4 +82,3 @@ object App extends cask.MainRoutes {
 
   Contact.loadDb()
   initialize()
-}
