@@ -1,10 +1,11 @@
 package io.feoktant.htmx
 
 import scalatags.Text.all.*
+import scalatags.generic
 
 object Templates {
 
-  private def layout(content: Seq[Modifier]): doctype =
+  private def layout(content: Frag*): doctype =
     doctype("html")(
       html(lang := "")(
         head(
@@ -63,11 +64,11 @@ object Templates {
         a(href := "/contacts/new")("Add Contact") // 1
       )
 
-    layout(Seq(
+    layout(
       aForm(None),
       contactsTable(contacts),
       newContactLink,
-    ))
+    )
   }
 
   def `new`(
@@ -78,7 +79,7 @@ object Templates {
     //2 A label for the first form input.
     //3 The first form input, of type email.
     //4 Any error messages associated with this field.
-    layout(Seq(
+    layout(
       form(action := "/contacts/new", method := "post")( // 1
         legend("Contact Values"),
         p(
@@ -110,28 +111,26 @@ object Templates {
       p(
         a(href := "/contacts")("Back")
       ),
-    ))
+    )
 
   def show(contact: Contact): doctype =
     layout(
-      Seq(
-        h1(Seq(contact.first, contact.last).flatten.mkString(" ")),
-        div(
-          div(s"Phone: ${contact.phone.getOrElse("")}"),
-          div(s"Email: ${contact.email}")
-        ),
-        p(
-          a(href := s"/contacts/${contact.id}/edit")("Edit"),
-          a(href := "/contacts")("Back")
-        ),
-      )
+      h1(Seq(contact.first, contact.last).flatten.mkString(" ")),
+      div(
+        div(s"Phone: ${contact.phone.getOrElse("")}"),
+        div(s"Email: ${contact.email}")
+      ),
+      p(
+        a(href := s"/contacts/${contact.id}/edit")("Edit"),
+        a(href := "/contacts")("Back")
+      ),
     )
 
   def edit(
     contact: Contact,
     errors: Map[String, String] = Map.empty,
   ): doctype =
-    layout(Seq(
+    layout(
       form(action := s"/contacts/${contact.id}/edit", method := "post")(
         legend("Contact Values"),
         p(
@@ -147,16 +146,16 @@ object Templates {
           span(`class` := "error")(errors.get("first")),
         ),
         p(
-         label(`for` := "last_name")("Last Name"),
-         input(name := "last_name", id := "last_name", `type` := "text",
+          label(`for` := "last_name")("Last Name"),
+          input(name := "last_name", id := "last_name", `type` := "text",
                placeholder := "Last Name", value := contact.last.getOrElse("")),
-         span(`class` := "error")(errors.get("last")),
-         ),
-         p(
-         label(`for` := "phone")("Phone"),
-         input(name := "phone", id := "phone", `type` := "text",
+          span(`class` := "error")(errors.get("last")),
+        ),
+        p(
+          label(`for` := "phone")("Phone"),
+          input(name := "phone", id := "phone", `type` := "text",
                placeholder := "Phone", value := contact.phone.getOrElse("")),
-         span(`class` := "error")(errors.get("phone")),
+          span(`class` := "error")(errors.get("phone")),
         ),
         button("Save")
       ),
@@ -166,5 +165,5 @@ object Templates {
       p(
         a(href := "/contacts")("Back")
       ),
-    ))
+    )
 }
