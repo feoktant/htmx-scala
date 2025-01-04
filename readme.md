@@ -25,3 +25,15 @@ JSP or Twirl.
 
 [`missing.css`](https://missing.style) was updated to v1.1.3 as the latest release.
 It lost tag `all-caps`.
+
+### Cask and Scalatags
+
+It's not clear howto better use these two libs together. I don't know the best
+way to reuse urls in annotation and template. Also, no Flask's `flash()`.
+`Redirect` and `Response` are different types, thus not clear how to use it.
+404 page looks strange.
+
+### Scala
+
+It is easier to use H2 db than file writing. Errors provided json looks strange.
+Validation and Active Record pattern looks totally separated from Scala.
